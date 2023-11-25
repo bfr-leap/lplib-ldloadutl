@@ -36,8 +36,8 @@ export function saveTelemetrySubsessions(
 }
 
 export function getTelemetryScan(
-    leagueId: string,
-    subsessionId: string
+    leagueId: number,
+    subsessionId: number
 ): SubsessionTelemetry | null {
     try {
         let ret: SubsessionTelemetry = <SubsessionTelemetry>JSON.parse(
