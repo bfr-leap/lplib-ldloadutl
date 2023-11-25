@@ -12,3 +12,7 @@ export {
     saveTelemetrySubsessions,
     getTelemetryScan,
 } from './ldata-loaders/ldata-irrpy-data-loader';
+export {
+    getReconstructedTelemetry,
+    writeReconstructedTelemetry,
+} from './ldata-loaders/ldata-xftelem-data-loader';
