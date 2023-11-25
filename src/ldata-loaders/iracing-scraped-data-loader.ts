@@ -100,16 +100,3 @@ export function getMembersData(
 
     return ret;
 }
-
-export function getSubsessionTelemetry(
-    subsessionId: number
-): SubsessionTelemetry {
-    let ret: SubsessionTelemetry = <SubsessionTelemetry>JSON.parse(
-        readFileSync(`${MNT_PT}../irrpy/${subsessionId}.json`, {
-            encoding: 'utf8',
-            flag: 'r',
-        })
-    );
-
-    return ret;
-}
