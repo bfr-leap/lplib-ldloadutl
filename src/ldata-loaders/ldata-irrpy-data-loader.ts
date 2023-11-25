@@ -38,7 +38,7 @@ export function saveTelemetrySubsessions(
 export function getTelemetryScan(
     leagueId: string,
     subsessionId: string
-): SubsessionTelemetry {
+): SubsessionTelemetry | null {
     try {
         let ret: SubsessionTelemetry = <SubsessionTelemetry>JSON.parse(
             readFileSync(
