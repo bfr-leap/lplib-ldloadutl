@@ -38,7 +38,7 @@ export function getReconstructedTelemetry(
     }
 }
 
-export function exportReconstructedTelemetry(
+export function writeReconstructedTelemetry(
     leagueId: number,
     subsessionId: number,
     simsessionNumber: number,
