@@ -1,18 +1,8 @@
-import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { EpochTelemetry } from 'ir-endpoints-types';
+import { ldataWriteFile } from './fsutil';
 
 const MNT_PT = './public/data/ldata-xftelem/';
-
-function wf(obj: any, name: string) {
-    name = name.replace(/-/g, 'n');
-    const ids = name.split('.')[0].split('_');
-    const path = `${MNT_PT}${ids.slice(0, -1).join('/')}/`;
-    if (!existsSync(path)) {
-        mkdirSync(path, { recursive: true });
-    }
-    let newName = ids[ids.length - 1];
-    writeFileSync(`${path}${newName}.json`, JSON.stringify(obj));
-}
 
 export function getReconstructedTelemetry(
     leagueId: number,
@@ -44,8 +34,9 @@ export function writeReconstructedTelemetry(
     simsessionNumber: number,
     telemetry: EpochTelemetry
 ): void {
-    wf(
-        telemetry,
-        `reconstructedTelemetry_${leagueId}_${subsessionId}_${simsessionNumber}.json`
-    );
+    ldataWriteFile(telemetry, MNT_PT, `reconstructedTelemetry`, [
+        leagueId,
+        subsessionId,
+        simsessionNumber,
+    ]);
 }

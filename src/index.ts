@@ -16,3 +16,13 @@ export {
     getReconstructedTelemetry,
     writeReconstructedTelemetry,
 } from './ldata-loaders/ldata-xftelem-data-loader';
+export {
+    getRawPositionChanges,
+    getOnTrackOvertakes,
+    getOnTrackPitStops,
+    getOnTrackIncidents,
+    saveRawPositionChanges,
+    saveOnTrackOvertakes,
+    saveOnTrackPitStops,
+    saveOnTrackIncidents,
+} from './ldata-loaders/ldata-trkevts-data-loader';
