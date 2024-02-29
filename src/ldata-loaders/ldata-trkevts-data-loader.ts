@@ -51,6 +51,18 @@ export function getOnTrackIncidents(
     ]);
 }
 
+export function getOnTrackFinishingNotes(
+    leagueId: number,
+    subsessionId: number,
+    simsessionNumber: number
+): OnTrackRaceEvents | null {
+    return ldataReadFile<OnTrackRaceEvents>(MNT_PT, 'onTrackFinishingNotes', [
+        leagueId,
+        subsessionId,
+        simsessionNumber,
+    ]);
+}
+
 export function saveRawPositionChanges(
     leagueId: number,
     subsessionId: number,
@@ -97,6 +109,19 @@ export function saveOnTrackIncidents(
     dataset: OnTrackRaceEvents
 ): void {
     ldataWriteFile(dataset, MNT_PT, 'onTrackIncidents', [
+        leagueId,
+        subsessionId,
+        simsessionNumber,
+    ]);
+}
+
+export function saveOnTrackFinishingNotes(
+    leagueId: number,
+    subsessionId: number,
+    simsessionNumber: number,
+    dataset: OnTrackRaceEvents
+): void {
+    ldataWriteFile(dataset, MNT_PT, 'onTrackFinishingNotes', [
         leagueId,
         subsessionId,
         simsessionNumber,
