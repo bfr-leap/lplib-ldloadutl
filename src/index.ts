@@ -21,8 +21,10 @@ export {
     getOnTrackOvertakes,
     getOnTrackPitStops,
     getOnTrackIncidents,
+    getOnTrackFinishingNotes,
     saveRawPositionChanges,
     saveOnTrackOvertakes,
     saveOnTrackPitStops,
     saveOnTrackIncidents,
+    saveOnTrackFinishingNotes,
 } from './ldata-loaders/ldata-trkevts-data-loader';
