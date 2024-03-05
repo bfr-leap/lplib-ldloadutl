@@ -28,3 +28,8 @@ export {
     saveOnTrackIncidents,
     saveOnTrackFinishingNotes,
 } from './ldata-loaders/ldata-trkevts-data-loader';
+
+export {
+    getSimsessionSummary,
+    saveSimsessionSummary,
+} from './ldata-loaders/ldata-gentxt-data-loader';
