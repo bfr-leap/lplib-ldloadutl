@@ -40,14 +40,23 @@ export function getTelemetryScan(
     subsessionId: number
 ): SubsessionTelemetry | null {
     try {
-        let ret: SubsessionTelemetry = <SubsessionTelemetry>JSON.parse(
-            readFileSync(
-                `${MNT_PT}telemetryScans/${leagueId}/${subsessionId}.json`,
-                {
-                    encoding: 'utf8',
-                    flag: 'r',
-                }
-            )
+        let strTelemetry: string = '';
+        let nans = [/-nan\(ind\)/g, /nan\(ind\)/g, /inf/g];
+
+        strTelemetry = readFileSync(
+            `${MNT_PT}telemetryScans/${leagueId}/${subsessionId}.json`,
+            {
+                encoding: 'utf8',
+                flag: 'r',
+            }
+        );
+
+        for (let nan of nans) {
+            strTelemetry = strTelemetry.replace(nan, '-1');
+        }
+
+        let ret: SubsessionTelemetry = <SubsessionTelemetry>(
+            JSON.parse(strTelemetry)
         );
 
         return ret;
