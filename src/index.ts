@@ -33,3 +33,9 @@ export {
     getSimsessionSummary,
     saveSimsessionSummary,
 } from './ldata-loaders/ldata-gentxt-data-loader';
+
+export {
+    getSimsessionPodcastScriptedSrc,
+    saveSimsessionPodcastScriptedSrc,
+} from './ldata-loaders/ldata-pdcsrc-data-loader';
+

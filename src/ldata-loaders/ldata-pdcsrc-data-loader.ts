@@ -15,7 +15,7 @@ export function getSimsessionPodcastScriptedSrc(
     );
 }
 
-export function saveSimsessionSummary(
+export function saveSimsessionPodcastScriptedSrc(
     subsessionId: number,
     simsessionNumber: number,
     dataset: PodcastScriptedSrc
