@@ -41,7 +41,7 @@ export function getTelemetryScan(
 ): SubsessionTelemetry | null {
     try {
         let strTelemetry: string = '';
-        let nans = [/-nan\(ind\)/g, /nan\(ind\)/g, /inf/g];
+        let nans = [/-nan\(ind\)/g, /nan\(ind\)/g, /inf/g, /-inf/g, /--1/g];
 
         strTelemetry = readFileSync(
             `${MNT_PT}telemetryScans/${leagueId}/${subsessionId}.json`,
