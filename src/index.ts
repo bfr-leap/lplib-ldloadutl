@@ -5,7 +5,7 @@ export {
     getLapChartData,
     getMembersData,
 } from './ldata-loaders/iracing-scraped-data-loader';
-export { getSimSessionResults } from './ldata-loaders/iracing-derived-data-loader';
+export { getSimSessionResults, getLeaguSubsessionIndex } from './ldata-loaders/iracing-derived-data-loader';
 export { getActiveLeagueSchedule } from './ldata-loaders/ldata-usrcfg-data-loader';
 export {
     getTelemetrySubsessions,

@@ -10,7 +10,7 @@
 
 import { readFileSync } from 'fs';
 
-import type { SimsessionResults } from 'ir-endpoints-types';
+import type { SimsessionResults, SeasonSimsessionIndex } from 'ir-endpoints-types';
 
 const MNT_PT = './public/data/ldata-rsltsts/';
 
@@ -23,6 +23,22 @@ export function getSimSessionResults(
     let ret: SimsessionResults = <SimsessionResults>JSON.parse(
         readFileSync(
             `${MNT_PT}simSessionResults/${subsessionId}/${simsessionStr}.json`,
+            {
+                encoding: 'utf8',
+                flag: 'r',
+            }
+        )
+    );
+
+    return ret;
+}
+
+export function getLeaguSubsessionIndex(
+    leagueId: number
+): SeasonSimsessionIndex[] {
+    let ret: SeasonSimsessionIndex[] = <SeasonSimsessionIndex[]>JSON.parse(
+        readFileSync(
+            `${MNT_PT}leagueSimsessionIndex/${leagueId}.json`,
             {
                 encoding: 'utf8',
                 flag: 'r',
