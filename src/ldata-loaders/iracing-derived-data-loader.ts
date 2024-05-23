@@ -10,7 +10,7 @@
 
 import { readFileSync } from 'fs';
 
-import type { SimsessionResults, SeasonSimsessionIndex } from 'ir-endpoints-types';
+import type { SimsessionResults, SeasonSimsessionIndex, ST_DriverTelemetry } from 'ir-endpoints-types';
 
 const MNT_PT = './public/data/ldata-rsltsts/';
 
@@ -39,6 +39,27 @@ export function getLeaguSubsessionIndex(
     let ret: SeasonSimsessionIndex[] = <SeasonSimsessionIndex[]>JSON.parse(
         readFileSync(
             `${MNT_PT}leagueSimsessionIndex/${leagueId}.json`,
+            {
+                encoding: 'utf8',
+                flag: 'r',
+            }
+        )
+    );
+
+    return ret;
+}
+
+export function getSimsessionDriverTelemetry(
+    subssesion: number,
+    simsession: number,
+    driver: number
+
+): ST_DriverTelemetry {
+    let simsessionStr =
+        simsession < 0 ? `n${-simsession}` : `${simsession}`;
+    let ret: ST_DriverTelemetry = <ST_DriverTelemetry>JSON.parse(
+        readFileSync(
+            `${MNT_PT}simsessionDriverTelemetry/${subssesion}/${simsessionStr}/${driver}.json`,
             {
                 encoding: 'utf8',
                 flag: 'r',
