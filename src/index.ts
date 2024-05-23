@@ -39,3 +39,12 @@ export {
     saveSimsessionPodcastScriptedSrc,
 } from './ldata-loaders/ldata-pdcsrc-data-loader';
 
+export {
+    getStartFinishChartData,
+    saveStartFinishChartData,
+    getCumulativeDeltaChartData,
+    saveCumulativeDeltaChartData,
+    saveCumulativeDeltaBestLapChartData,
+    savePacePercentVsIdealLapChartData,
+    savePacePercentChartData
+} from './ldata-loaders/ldata-chart-data-loader';
