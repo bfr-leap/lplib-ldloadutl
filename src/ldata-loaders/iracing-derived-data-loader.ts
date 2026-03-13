@@ -11,6 +11,7 @@
 import { readFileSync } from 'fs';
 
 import type { SimsessionResults, SeasonSimsessionIndex, ST_DriverTelemetry } from 'ir-endpoints-types';
+import { ldataReadFile, ldataWriteFile } from './fsutil';
 
 const MNT_PT = './public/data/ldata-rsltsts/';
 
@@ -68,4 +69,21 @@ export function getSimsessionDriverTelemetry(
     );
 
     return ret;
+}
+
+const DATASET_PROCESSED_TELEMETRY = 'processedTelemetryManifest';
+
+export function getProcessedTelemetryManifest(leagueId: number): Set<number> {
+    const data = ldataReadFile<number[]>(MNT_PT, DATASET_PROCESSED_TELEMETRY, [leagueId]);
+    if (data === null) {
+        return new Set();
+    }
+    return new Set<number>(data);
+}
+
+export function saveProcessedTelemetryManifest(
+    leagueId: number,
+    subsessionIds: Set<number>
+): void {
+    ldataWriteFile(Array.from(subsessionIds), MNT_PT, DATASET_PROCESSED_TELEMETRY, [leagueId]);
 }

@@ -8,7 +8,9 @@ export {
 export {
     getSimSessionResults,
     getLeaguSubsessionIndex,
-    getSimsessionDriverTelemetry
+    getSimsessionDriverTelemetry,
+    getProcessedTelemetryManifest,
+    saveProcessedTelemetryManifest,
 } from './ldata-loaders/iracing-derived-data-loader';
 export { getActiveLeagueSchedule } from './ldata-loaders/ldata-usrcfg-data-loader';
 export {
