@@ -38,6 +38,10 @@ export {
 export {
     getSimsessionSummary,
     saveSimsessionSummary,
+    getDotdProfile,
+    saveDotdProfile,
+    getDotdManifest,
+    saveDotdManifest,
 } from './ldata-loaders/ldata-gentxt-data-loader';
 
 export {
