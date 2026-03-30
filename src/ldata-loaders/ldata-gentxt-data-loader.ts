@@ -1,5 +1,9 @@
 import { ldataWriteFile, ldataReadFile } from './fsutil';
-import { GeneratedSimsessionSummary } from 'ir-endpoints-types';
+import type {
+    GeneratedSimsessionSummary,
+    DotdProfileData,
+    DotdManifestEntry,
+} from 'ir-endpoints-types';
 
 const MNT_PT = './public/data/ldata-gentxt/';
 
@@ -26,3 +30,48 @@ export function saveSimsessionSummary(
 }
 
 // todo: add [get/save]SimsessionHighlight/
+
+export function getDotdProfile(
+    leagueId: number,
+    seasonId: number,
+    custId: number
+): DotdProfileData | null {
+    return ldataReadFile<DotdProfileData>(MNT_PT, 'dotdProfile', [
+        leagueId,
+        seasonId,
+        custId,
+    ]);
+}
+
+export function saveDotdProfile(
+    leagueId: number,
+    seasonId: number,
+    custId: number,
+    profile: DotdProfileData
+): void {
+    ldataWriteFile(profile, MNT_PT, 'dotdProfile', [
+        leagueId,
+        seasonId,
+        custId,
+    ]);
+}
+
+export function getDotdManifest(
+    leagueId: number,
+    seasonId: number
+): DotdManifestEntry[] {
+    return (
+        ldataReadFile<DotdManifestEntry[]>(MNT_PT, 'dotdManifest', [
+            leagueId,
+            seasonId,
+        ]) ?? []
+    );
+}
+
+export function saveDotdManifest(
+    leagueId: number,
+    seasonId: number,
+    manifest: DotdManifestEntry[]
+): void {
+    ldataWriteFile(manifest, MNT_PT, 'dotdManifest', [leagueId, seasonId]);
+}
