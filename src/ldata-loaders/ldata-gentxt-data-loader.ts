@@ -33,25 +33,21 @@ export function saveSimsessionSummary(
 
 export function getDotdProfile(
     leagueId: number,
-    seasonId: number,
     custId: number
 ): DotdProfileData | null {
     return ldataReadFile<DotdProfileData>(MNT_PT, 'dotdProfile', [
         leagueId,
-        seasonId,
         custId,
     ]);
 }
 
 export function saveDotdProfile(
     leagueId: number,
-    seasonId: number,
     custId: number,
     profile: DotdProfileData
 ): void {
     ldataWriteFile(profile, MNT_PT, 'dotdProfile', [
         leagueId,
-        seasonId,
         custId,
     ]);
 }
