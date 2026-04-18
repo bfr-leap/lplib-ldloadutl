@@ -1,4 +1,10 @@
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
+import { notifyWrite } from './kafka-notify';
+
+function mountPointToTopic(mountPoint: string): string {
+    const parts = mountPoint.split('/').filter((p) => p.length > 0);
+    return parts[parts.length - 1];
+}
 
 // export function ldataWriteFileOld(obj: any, name: string, mountPoint: string) {
 //     name = name.replace(/-/g, 'n');
@@ -26,6 +32,12 @@ export function ldataWriteFile(
     }
     const filePath = `${mountPoint}${datasetName}/${keyStrings.join('/')}.json`;
     writeFileSync(filePath, JSON.stringify(obj));
+
+    const keyRecord: Record<string, number> = {};
+    keys.forEach((k, i) => {
+        keyRecord[`key${i}`] = k;
+    });
+    notifyWrite(mountPointToTopic(mountPoint), datasetName, keyRecord);
 }
 
 export function ldataReadFile<T>(

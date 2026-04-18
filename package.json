@@ -17,7 +17,8 @@
         "prettier": "2.8.0"
     },
     "dependencies": {
-        "ir-endpoints-types": "git+https://github.com/bfr-leap/ir-endpoint-types.git#main"
+        "ir-endpoints-types": "git+https://github.com/bfr-leap/ir-endpoint-types.git#main",
+        "kafkajs": "^2.2.4"
     },
     "keywords": [],
     "author": "",
