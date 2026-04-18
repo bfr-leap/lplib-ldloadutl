@@ -35,7 +35,7 @@ export function saveTelemetrySubsessions(
         }
     );
 
-    notifyWrite('ldata-irrpy', 'telemetrySubsessions', { leagueId });
+    notifyWrite('ldata-irrpy', 'telemetrySubsessions', [leagueId]);
 }
 
 export function getTelemetryScan(

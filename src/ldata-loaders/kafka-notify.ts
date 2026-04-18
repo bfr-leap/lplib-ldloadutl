@@ -2,6 +2,9 @@ import { Kafka, Producer } from 'kafkajs';
 
 const BROKER = 'leap-relay1:9092';
 const CLIENT_ID = 'lplib-ldloadutl';
+const TOPIC = 'ldata-update-log';
+const SOURCE = 'lplib-ldloadutl';
+const STREAM_SUFFIX = ':strm';
 
 let producer: Producer | null = null;
 let initPromise: Promise<void> | null = null;
@@ -29,37 +32,34 @@ function init(): Promise<void> {
 }
 
 export function notifyWrite(
-    topic: string,
+    datasetId: string,
     datasetName: string,
-    keys: Record<string, number>
+    keys: number[]
 ): void {
     if (disabled) return;
 
+    const keyStrings = keys.map((k) => (k < 0 ? `n${-k}` : `${k}`));
+    const affectedField = [datasetName, ...keyStrings].join('/');
+    const summaryKeys = keys.join(':');
+
     const payload = {
-        dataset: datasetName,
-        ...keys,
-        timestamp: Date.now(),
+        dataset_id: `${datasetId}${STREAM_SUFFIX}`,
+        source: SOURCE,
+        timestamp: Math.floor(Date.now() / 1000),
+        update_type: 'modification',
+        affected_fields: [affectedField],
+        change_summary: `write: ${datasetName} ${summaryKeys}`,
     };
-    const messageKey = Object.values(keys).join(':');
 
     init()
         .then(() => {
             if (!producer) return;
             return producer.send({
-                topic,
-                messages: [
-                    {
-                        key: messageKey,
-                        value: JSON.stringify(payload),
-                    },
-                ],
+                topic: TOPIC,
+                messages: [{ value: JSON.stringify(payload) }],
             });
         })
         .catch((e) => {
-            console.log(
-                `ldloadutl: Kafka send failed for topic ${topic}: ${
-                    e?.message ?? e
-                }`
-            );
+            console.log(`ldloadutl: Kafka send failed: ${e?.message ?? e}`);
         });
 }
