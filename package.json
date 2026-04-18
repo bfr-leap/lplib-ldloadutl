@@ -8,13 +8,16 @@
         "src"
     ],
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "jest",
         "prettier-check": "npx prettier --check .",
         "prettier": "npx prettier --write ."
     },
     "devDependencies": {
+        "@types/jest": "^29.5.14",
         "@types/node": "^20.10.0",
-        "prettier": "2.8.0"
+        "jest": "^29.7.0",
+        "prettier": "2.8.0",
+        "ts-jest": "^29.4.9"
     },
     "dependencies": {
         "ir-endpoints-types": "git+https://github.com/bfr-leap/ir-endpoint-types.git#main",
