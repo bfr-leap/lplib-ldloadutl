@@ -133,4 +133,20 @@ describe('notifyWrite', () => {
         );
         expect(sendFailLogs).toHaveLength(1);
     });
+
+    it('stringifies non-Error rejection values in the failure log', async () => {
+        const { send } = kafkaMocks();
+        send.mockRejectedValueOnce('raw-string-error');
+
+        const { notifyWrite } = require('./kafka-notify');
+        notifyWrite('ldata-charts', 'a', [1]);
+        await flush();
+
+        const sendFailLogs = logSpy.mock.calls.filter(
+            (args) =>
+                typeof args[0] === 'string' &&
+                args[0].includes('raw-string-error')
+        );
+        expect(sendFailLogs).toHaveLength(1);
+    });
 });
