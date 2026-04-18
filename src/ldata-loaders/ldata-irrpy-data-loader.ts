@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 
 import type { SubsessionTelemetry } from 'ir-endpoints-types';
+import { notifyWrite } from './kafka-notify';
 
 const MNT_PT = './public/data/ldata-irrpy/';
 
@@ -33,6 +34,8 @@ export function saveTelemetrySubsessions(
             flag: 'w',
         }
     );
+
+    notifyWrite('ldata-irrpy', 'telemetrySubsessions', [leagueId]);
 }
 
 export function getTelemetryScan(
