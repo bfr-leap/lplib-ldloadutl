@@ -69,7 +69,8 @@ export function getStewardRulingsByLeague(leagueId: number): StewardRuling[] {
  * unique across iRacing, so this walks all leagues and filters).
  */
 export function getStewardRulingsBySeason(seasonId: number): StewardRuling[] {
-    return getAllStewardRulings().filter((r) => r.season_id === seasonId);
+    const needle = String(seasonId);
+    return getAllStewardRulings().filter((r) => String(r.season_id) === needle);
 }
 
 /**
