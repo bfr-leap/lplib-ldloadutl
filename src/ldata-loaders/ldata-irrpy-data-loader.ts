@@ -1,77 +1,50 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { readFile, writeFile } from 'fs/promises';
+import { readFileSync } from 'fs';
+import { readFile } from 'fs/promises';
 
 import type { SubsessionTelemetry } from 'ir-endpoints-types';
-import { notifyWrite } from './kafka-notify';
+import {
+    ldataReadFile,
+    ldataReadFileAsync,
+    ldataWriteFile,
+    ldataWriteFileAsync,
+} from './fsutil';
 
 const MNT_PT = './public/data/ldata-irrpy/';
+const DATASET_TELEMETRY_SUBSESSIONS = 'telemetrySubsessions';
 
 export function getTelemetrySubsessions(leagueId: number): number[] | null {
-    try {
-        let ret: number[] = <number[]>JSON.parse(
-            readFileSync(`${MNT_PT}telemetrySubsessions/${leagueId}.json`, {
-                encoding: 'utf8',
-                flag: 'r',
-            })
-        );
-
-        return ret;
-    } catch (e) {
-        return null;
-    }
+    return ldataReadFile<number[]>(MNT_PT, DATASET_TELEMETRY_SUBSESSIONS, [
+        leagueId,
+    ]);
 }
 
-export async function getTelemetrySubsessionsAsync(
+export function getTelemetrySubsessionsAsync(
     leagueId: number
 ): Promise<number[] | null> {
-    try {
-        let ret: number[] = <number[]>JSON.parse(
-            await readFile(`${MNT_PT}telemetrySubsessions/${leagueId}.json`, {
-                encoding: 'utf8',
-                flag: 'r',
-            })
-        );
-
-        return ret;
-    } catch (e) {
-        return null;
-    }
+    return ldataReadFileAsync<number[]>(MNT_PT, DATASET_TELEMETRY_SUBSESSIONS, [
+        leagueId,
+    ]);
 }
 
 export function saveTelemetrySubsessions(
     leagueId: number,
     subsessions: number[]
 ): void {
-    let subsessionsJson = JSON.stringify(subsessions);
-
-    writeFileSync(
-        `${MNT_PT}telemetrySubsessions/${leagueId}.json`,
-        subsessionsJson,
-        {
-            encoding: 'utf8',
-            flag: 'w',
-        }
-    );
-
-    notifyWrite('ldata-irrpy', 'telemetrySubsessions', [leagueId]);
+    ldataWriteFile(subsessions, MNT_PT, DATASET_TELEMETRY_SUBSESSIONS, [
+        leagueId,
+    ]);
 }
 
-export async function saveTelemetrySubsessionsAsync(
+export function saveTelemetrySubsessionsAsync(
     leagueId: number,
     subsessions: number[]
 ): Promise<void> {
-    let subsessionsJson = JSON.stringify(subsessions);
-
-    await writeFile(
-        `${MNT_PT}telemetrySubsessions/${leagueId}.json`,
-        subsessionsJson,
-        {
-            encoding: 'utf8',
-            flag: 'w',
-        }
+    return ldataWriteFileAsync(
+        subsessions,
+        MNT_PT,
+        DATASET_TELEMETRY_SUBSESSIONS,
+        [leagueId]
     );
-
-    notifyWrite('ldata-irrpy', 'telemetrySubsessions', [leagueId]);
 }
 
 export function getTelemetryScan(

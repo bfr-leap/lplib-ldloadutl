@@ -19,6 +19,7 @@ import type {
     MembersData,
     SubsessionTelemetry,
 } from 'ir-endpoints-types';
+import { ldataReadFile, ldataReadFileAsync } from './fsutil';
 
 const MNT_PT = './public/data/ldata-irweb/';
 
@@ -45,77 +46,36 @@ export async function getLeagueDirectoryAsync(): Promise<LeagueDirectory> {
 }
 
 export function getLeagueSeasons(leagueId: number): LeagueSeasons | null {
-    try {
-        let ret: LeagueSeasons = <LeagueSeasons>JSON.parse(
-            readFileSync(`${MNT_PT}leagueSeasons/${leagueId}.json`, {
-                encoding: 'utf8',
-                flag: 'r',
-            })
-        );
-
-        return ret;
-    } catch (e) {
-        return null;
-    }
+    return ldataReadFile<LeagueSeasons>(MNT_PT, 'leagueSeasons', [leagueId]);
 }
 
-export async function getLeagueSeasonsAsync(
+export function getLeagueSeasonsAsync(
     leagueId: number
 ): Promise<LeagueSeasons | null> {
-    try {
-        let ret: LeagueSeasons = <LeagueSeasons>JSON.parse(
-            await readFile(`${MNT_PT}leagueSeasons/${leagueId}.json`, {
-                encoding: 'utf8',
-                flag: 'r',
-            })
-        );
-
-        return ret;
-    } catch (e) {
-        return null;
-    }
+    return ldataReadFileAsync<LeagueSeasons>(MNT_PT, 'leagueSeasons', [
+        leagueId,
+    ]);
 }
 
 export function getLeagueSeasonSessions(
     leagueId: number,
     seasonId: number
 ): LeagueSeasonSessions | null {
-    try {
-        let ret: LeagueSeasonSessions = <LeagueSeasonSessions>JSON.parse(
-            readFileSync(
-                `${MNT_PT}leagueSeasonSessions/${leagueId}/${seasonId}.json`,
-                {
-                    encoding: 'utf8',
-                    flag: 'r',
-                }
-            )
-        );
-
-        return ret;
-    } catch (e) {
-        return null;
-    }
+    return ldataReadFile<LeagueSeasonSessions>(MNT_PT, 'leagueSeasonSessions', [
+        leagueId,
+        seasonId,
+    ]);
 }
 
-export async function getLeagueSeasonSessionsAsync(
+export function getLeagueSeasonSessionsAsync(
     leagueId: number,
     seasonId: number
 ): Promise<LeagueSeasonSessions | null> {
-    try {
-        let ret: LeagueSeasonSessions = <LeagueSeasonSessions>JSON.parse(
-            await readFile(
-                `${MNT_PT}leagueSeasonSessions/${leagueId}/${seasonId}.json`,
-                {
-                    encoding: 'utf8',
-                    flag: 'r',
-                }
-            )
-        );
-
-        return ret;
-    } catch (e) {
-        return null;
-    }
+    return ldataReadFileAsync<LeagueSeasonSessions>(
+        MNT_PT,
+        'leagueSeasonSessions',
+        [leagueId, seasonId]
+    );
 }
 
 export function getLapChartData(

@@ -2,8 +2,8 @@ jest.mock('fs');
 jest.mock('fs/promises');
 jest.mock('./kafka-notify', () => ({ notifyWrite: jest.fn() }));
 
-import { readFileSync, writeFileSync } from 'fs';
-import { readFile, writeFile } from 'fs/promises';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFile, writeFile, mkdir, stat } from 'fs/promises';
 import {
     getTelemetrySubsessions,
     saveTelemetrySubsessions,
@@ -18,7 +18,10 @@ const MNT = './public/data/ldata-irrpy/';
 
 beforeEach(() => {
     jest.clearAllMocks();
+    (existsSync as jest.Mock).mockReturnValue(true);
+    (stat as jest.Mock).mockResolvedValue({});
     (writeFile as jest.Mock).mockResolvedValue(undefined);
+    (mkdir as jest.Mock).mockResolvedValue(undefined);
 });
 
 describe('getTelemetrySubsessions', () => {
@@ -44,8 +47,7 @@ describe('saveTelemetrySubsessions', () => {
         saveTelemetrySubsessions(42, [10, 20]);
         expect(writeFileSync).toHaveBeenCalledWith(
             `${MNT}telemetrySubsessions/42.json`,
-            '[10,20]',
-            expect.any(Object)
+            '[10,20]'
         );
     });
 
@@ -120,8 +122,7 @@ describe('saveTelemetrySubsessionsAsync', () => {
         await saveTelemetrySubsessionsAsync(42, [10, 20]);
         expect(writeFile).toHaveBeenCalledWith(
             `${MNT}telemetrySubsessions/42.json`,
-            '[10,20]',
-            expect.any(Object)
+            '[10,20]'
         );
     });
 
