@@ -9,6 +9,7 @@
  */
 
 import { readFileSync } from 'fs';
+import { readFile } from 'fs/promises';
 
 import type {
     LeagueDirectory,
@@ -32,10 +33,38 @@ export function getLeagueDirectory(): LeagueDirectory {
     return ret;
 }
 
+export async function getLeagueDirectoryAsync(): Promise<LeagueDirectory> {
+    let ret: LeagueDirectory = <LeagueDirectory>JSON.parse(
+        await readFile(`${MNT_PT}leagueDirectory.json`, {
+            encoding: 'utf8',
+            flag: 'r',
+        })
+    );
+
+    return ret;
+}
+
 export function getLeagueSeasons(leagueId: number): LeagueSeasons | null {
     try {
         let ret: LeagueSeasons = <LeagueSeasons>JSON.parse(
             readFileSync(`${MNT_PT}leagueSeasons/${leagueId}.json`, {
+                encoding: 'utf8',
+                flag: 'r',
+            })
+        );
+
+        return ret;
+    } catch (e) {
+        return null;
+    }
+}
+
+export async function getLeagueSeasonsAsync(
+    leagueId: number
+): Promise<LeagueSeasons | null> {
+    try {
+        let ret: LeagueSeasons = <LeagueSeasons>JSON.parse(
+            await readFile(`${MNT_PT}leagueSeasons/${leagueId}.json`, {
                 encoding: 'utf8',
                 flag: 'r',
             })
@@ -54,6 +83,27 @@ export function getLeagueSeasonSessions(
     try {
         let ret: LeagueSeasonSessions = <LeagueSeasonSessions>JSON.parse(
             readFileSync(
+                `${MNT_PT}leagueSeasonSessions/${leagueId}/${seasonId}.json`,
+                {
+                    encoding: 'utf8',
+                    flag: 'r',
+                }
+            )
+        );
+
+        return ret;
+    } catch (e) {
+        return null;
+    }
+}
+
+export async function getLeagueSeasonSessionsAsync(
+    leagueId: number,
+    seasonId: number
+): Promise<LeagueSeasonSessions | null> {
+    try {
+        let ret: LeagueSeasonSessions = <LeagueSeasonSessions>JSON.parse(
+            await readFile(
                 `${MNT_PT}leagueSeasonSessions/${leagueId}/${seasonId}.json`,
                 {
                     encoding: 'utf8',
@@ -87,12 +137,45 @@ export function getLapChartData(
     return ret;
 }
 
+export async function getLapChartDataAsync(
+    subsessionId: number,
+    simsessionNumber: number
+): Promise<LapChartData> {
+    let simsessionStr =
+        simsessionNumber < 0 ? `n${-simsessionNumber}` : `${simsessionNumber}`;
+    let ret: LapChartData = <LapChartData>JSON.parse(
+        await readFile(
+            `${MNT_PT}lapChartData/${subsessionId}/${simsessionStr}.json`,
+            {
+                encoding: 'utf8',
+                flag: 'r',
+            }
+        )
+    );
+
+    return ret;
+}
+
 export function getMembersData(
     leagueId: number,
     seasonId: number
 ): MembersData {
     let ret: MembersData = <MembersData>JSON.parse(
         readFileSync(`${MNT_PT}membersData/${leagueId}/${seasonId}.json`, {
+            encoding: 'utf8',
+            flag: 'r',
+        })
+    );
+
+    return ret;
+}
+
+export async function getMembersDataAsync(
+    leagueId: number,
+    seasonId: number
+): Promise<MembersData> {
+    let ret: MembersData = <MembersData>JSON.parse(
+        await readFile(`${MNT_PT}membersData/${leagueId}/${seasonId}.json`, {
             encoding: 'utf8',
             flag: 'r',
         })

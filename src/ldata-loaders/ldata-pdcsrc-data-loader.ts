@@ -1,6 +1,10 @@
-import { ldataWriteFile, ldataReadFile } from './fsutil';
+import {
+    ldataWriteFile,
+    ldataWriteFileAsync,
+    ldataReadFile,
+    ldataReadFileAsync,
+} from './fsutil';
 import { PodcastScriptedSrc } from 'ir-endpoints-types';
-
 
 const MNT_PT = './public/data/ldata-pdcsrc/';
 
@@ -9,6 +13,17 @@ export function getSimsessionPodcastScriptedSrc(
     simsessionNumber: number
 ): PodcastScriptedSrc | null {
     return ldataReadFile<PodcastScriptedSrc>(
+        MNT_PT,
+        'simsessionPodcastScriptedSrc',
+        [subsessionId, simsessionNumber]
+    );
+}
+
+export function getSimsessionPodcastScriptedSrcAsync(
+    subsessionId: number,
+    simsessionNumber: number
+): Promise<PodcastScriptedSrc | null> {
+    return ldataReadFileAsync<PodcastScriptedSrc>(
         MNT_PT,
         'simsessionPodcastScriptedSrc',
         [subsessionId, simsessionNumber]
@@ -26,3 +41,15 @@ export function saveSimsessionPodcastScriptedSrc(
     ]);
 }
 
+export function saveSimsessionPodcastScriptedSrcAsync(
+    subsessionId: number,
+    simsessionNumber: number,
+    dataset: PodcastScriptedSrc
+): Promise<void> {
+    return ldataWriteFileAsync(
+        dataset,
+        MNT_PT,
+        'simsessionPodcastScriptedSrc',
+        [subsessionId, simsessionNumber]
+    );
+}

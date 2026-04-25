@@ -1,4 +1,9 @@
-import { ldataWriteFile, ldataReadFile } from './fsutil';
+import {
+    ldataWriteFile,
+    ldataWriteFileAsync,
+    ldataReadFile,
+    ldataReadFileAsync,
+} from './fsutil';
 import type {
     GeneratedSimsessionSummary,
     DotdProfileData,
@@ -18,12 +23,34 @@ export function getSimsessionSummary(
     );
 }
 
+export function getSimsessionSummaryAsync(
+    subsessionId: number,
+    simsessionNumber: number
+): Promise<GeneratedSimsessionSummary | null> {
+    return ldataReadFileAsync<GeneratedSimsessionSummary>(
+        MNT_PT,
+        'simsessionSummary',
+        [subsessionId, simsessionNumber]
+    );
+}
+
 export function saveSimsessionSummary(
     subsessionId: number,
     simsessionNumber: number,
     dataset: GeneratedSimsessionSummary
 ): void {
     ldataWriteFile(dataset, MNT_PT, 'simsessionSummary', [
+        subsessionId,
+        simsessionNumber,
+    ]);
+}
+
+export function saveSimsessionSummaryAsync(
+    subsessionId: number,
+    simsessionNumber: number,
+    dataset: GeneratedSimsessionSummary
+): Promise<void> {
+    return ldataWriteFileAsync(dataset, MNT_PT, 'simsessionSummary', [
         subsessionId,
         simsessionNumber,
     ]);
@@ -41,12 +68,30 @@ export function getDotdProfile(
     ]);
 }
 
+export function getDotdProfileAsync(
+    leagueId: number,
+    custId: number
+): Promise<DotdProfileData | null> {
+    return ldataReadFileAsync<DotdProfileData>(MNT_PT, 'dotdProfile', [
+        leagueId,
+        custId,
+    ]);
+}
+
 export function saveDotdProfile(
     leagueId: number,
     custId: number,
     profile: DotdProfileData
 ): void {
-    ldataWriteFile(profile, MNT_PT, 'dotdProfile', [
+    ldataWriteFile(profile, MNT_PT, 'dotdProfile', [leagueId, custId]);
+}
+
+export function saveDotdProfileAsync(
+    leagueId: number,
+    custId: number,
+    profile: DotdProfileData
+): Promise<void> {
+    return ldataWriteFileAsync(profile, MNT_PT, 'dotdProfile', [
         leagueId,
         custId,
     ]);
@@ -64,10 +109,33 @@ export function getDotdManifest(
     );
 }
 
+export async function getDotdManifestAsync(
+    leagueId: number,
+    seasonId: number
+): Promise<DotdManifestEntry[]> {
+    return (
+        (await ldataReadFileAsync<DotdManifestEntry[]>(MNT_PT, 'dotdManifest', [
+            leagueId,
+            seasonId,
+        ])) ?? []
+    );
+}
+
 export function saveDotdManifest(
     leagueId: number,
     seasonId: number,
     manifest: DotdManifestEntry[]
 ): void {
     ldataWriteFile(manifest, MNT_PT, 'dotdManifest', [leagueId, seasonId]);
+}
+
+export function saveDotdManifestAsync(
+    leagueId: number,
+    seasonId: number,
+    manifest: DotdManifestEntry[]
+): Promise<void> {
+    return ldataWriteFileAsync(manifest, MNT_PT, 'dotdManifest', [
+        leagueId,
+        seasonId,
+    ]);
 }
