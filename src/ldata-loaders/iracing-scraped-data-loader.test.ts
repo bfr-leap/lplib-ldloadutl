@@ -94,6 +94,13 @@ describe('getLapChartData', () => {
             expect.any(Object)
         );
     });
+
+    it('returns null on read failure', () => {
+        (readFileSync as jest.Mock).mockImplementation(() => {
+            throw new Error('ENOENT');
+        });
+        expect(getLapChartData(123, 0)).toBeNull();
+    });
 });
 
 describe('getMembersData', () => {
@@ -104,6 +111,13 @@ describe('getMembersData', () => {
             `${MNT}membersData/42/7.json`,
             expect.any(Object)
         );
+    });
+
+    it('returns null on read failure', () => {
+        (readFileSync as jest.Mock).mockImplementation(() => {
+            throw new Error('ENOENT');
+        });
+        expect(getMembersData(42, 7)).toBeNull();
     });
 });
 
@@ -179,6 +193,11 @@ describe('getLapChartDataAsync', () => {
             expect.any(Object)
         );
     });
+
+    it('returns null on read failure', async () => {
+        (readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+        await expect(getLapChartDataAsync(123, 0)).resolves.toBeNull();
+    });
 });
 
 describe('getMembersDataAsync', () => {
@@ -191,5 +210,10 @@ describe('getMembersDataAsync', () => {
             `${MNT}membersData/42/7.json`,
             expect.any(Object)
         );
+    });
+
+    it('returns null on read failure', async () => {
+        (readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+        await expect(getMembersDataAsync(42, 7)).resolves.toBeNull();
     });
 });

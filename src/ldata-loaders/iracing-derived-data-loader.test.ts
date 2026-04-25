@@ -45,6 +45,13 @@ describe('getSimSessionResults', () => {
             expect.any(Object)
         );
     });
+
+    it('returns null on read failure', () => {
+        (readFileSync as jest.Mock).mockImplementation(() => {
+            throw new Error('ENOENT');
+        });
+        expect(getSimSessionResults(9999, 0)).toBeNull();
+    });
 });
 
 describe('getLeaguSubsessionIndex', () => {
@@ -55,6 +62,13 @@ describe('getLeaguSubsessionIndex', () => {
             `${MNT}leagueSimsessionIndex/42.json`,
             expect.any(Object)
         );
+    });
+
+    it('returns null on read failure', () => {
+        (readFileSync as jest.Mock).mockImplementation(() => {
+            throw new Error('ENOENT');
+        });
+        expect(getLeaguSubsessionIndex(42)).toBeNull();
     });
 });
 
@@ -75,6 +89,13 @@ describe('getSimsessionDriverTelemetry', () => {
             `${MNT}simsessionDriverTelemetry/111/2/333.json`,
             expect.any(Object)
         );
+    });
+
+    it('returns null on read failure', () => {
+        (readFileSync as jest.Mock).mockImplementation(() => {
+            throw new Error('ENOENT');
+        });
+        expect(getSimsessionDriverTelemetry(111, 0, 333)).toBeNull();
     });
 });
 
@@ -123,6 +144,11 @@ describe('getSimSessionResultsAsync', () => {
             expect.any(Object)
         );
     });
+
+    it('returns null on read failure', async () => {
+        (readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+        await expect(getSimSessionResultsAsync(9999, 0)).resolves.toBeNull();
+    });
 });
 
 describe('getLeaguSubsessionIndexAsync', () => {
@@ -134,6 +160,11 @@ describe('getLeaguSubsessionIndexAsync', () => {
             expect.any(Object)
         );
     });
+
+    it('returns null on read failure', async () => {
+        (readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+        await expect(getLeaguSubsessionIndexAsync(42)).resolves.toBeNull();
+    });
 });
 
 describe('getSimsessionDriverTelemetryAsync', () => {
@@ -144,6 +175,13 @@ describe('getSimsessionDriverTelemetryAsync', () => {
             `${MNT}simsessionDriverTelemetry/111/n2/333.json`,
             expect.any(Object)
         );
+    });
+
+    it('returns null on read failure', async () => {
+        (readFile as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+        await expect(
+            getSimsessionDriverTelemetryAsync(111, 0, 333)
+        ).resolves.toBeNull();
     });
 });
 

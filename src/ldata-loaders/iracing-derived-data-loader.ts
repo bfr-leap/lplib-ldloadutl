@@ -8,9 +8,6 @@
  *
  */
 
-import { readFileSync } from 'fs';
-import { readFile } from 'fs/promises';
-
 import type {
     SimsessionResults,
     SeasonSimsessionIndex,
@@ -28,103 +25,65 @@ const MNT_PT = './public/data/ldata-rsltsts/';
 export function getSimSessionResults(
     subsessionId: number,
     simsessionNumber: number
-): SimsessionResults {
-    let simsessionStr =
-        simsessionNumber < 0 ? `n${-simsessionNumber}` : `${simsessionNumber}`;
-    let ret: SimsessionResults = <SimsessionResults>JSON.parse(
-        readFileSync(
-            `${MNT_PT}simSessionResults/${subsessionId}/${simsessionStr}.json`,
-            {
-                encoding: 'utf8',
-                flag: 'r',
-            }
-        )
-    );
-
-    return ret;
+): SimsessionResults | null {
+    return ldataReadFile<SimsessionResults>(MNT_PT, 'simSessionResults', [
+        subsessionId,
+        simsessionNumber,
+    ]);
 }
 
-export async function getSimSessionResultsAsync(
+export function getSimSessionResultsAsync(
     subsessionId: number,
     simsessionNumber: number
-): Promise<SimsessionResults> {
-    let simsessionStr =
-        simsessionNumber < 0 ? `n${-simsessionNumber}` : `${simsessionNumber}`;
-    let ret: SimsessionResults = <SimsessionResults>JSON.parse(
-        await readFile(
-            `${MNT_PT}simSessionResults/${subsessionId}/${simsessionStr}.json`,
-            {
-                encoding: 'utf8',
-                flag: 'r',
-            }
-        )
-    );
-
-    return ret;
+): Promise<SimsessionResults | null> {
+    return ldataReadFileAsync<SimsessionResults>(MNT_PT, 'simSessionResults', [
+        subsessionId,
+        simsessionNumber,
+    ]);
 }
 
 export function getLeaguSubsessionIndex(
     leagueId: number
-): SeasonSimsessionIndex[] {
-    let ret: SeasonSimsessionIndex[] = <SeasonSimsessionIndex[]>JSON.parse(
-        readFileSync(`${MNT_PT}leagueSimsessionIndex/${leagueId}.json`, {
-            encoding: 'utf8',
-            flag: 'r',
-        })
+): SeasonSimsessionIndex[] | null {
+    return ldataReadFile<SeasonSimsessionIndex[]>(
+        MNT_PT,
+        'leagueSimsessionIndex',
+        [leagueId]
     );
-
-    return ret;
 }
 
-export async function getLeaguSubsessionIndexAsync(
+export function getLeaguSubsessionIndexAsync(
     leagueId: number
-): Promise<SeasonSimsessionIndex[]> {
-    let ret: SeasonSimsessionIndex[] = <SeasonSimsessionIndex[]>JSON.parse(
-        await readFile(`${MNT_PT}leagueSimsessionIndex/${leagueId}.json`, {
-            encoding: 'utf8',
-            flag: 'r',
-        })
+): Promise<SeasonSimsessionIndex[] | null> {
+    return ldataReadFileAsync<SeasonSimsessionIndex[]>(
+        MNT_PT,
+        'leagueSimsessionIndex',
+        [leagueId]
     );
-
-    return ret;
 }
 
 export function getSimsessionDriverTelemetry(
     subssesion: number,
     simsession: number,
     driver: number
-): ST_DriverTelemetry {
-    let simsessionStr = simsession < 0 ? `n${-simsession}` : `${simsession}`;
-    let ret: ST_DriverTelemetry = <ST_DriverTelemetry>JSON.parse(
-        readFileSync(
-            `${MNT_PT}simsessionDriverTelemetry/${subssesion}/${simsessionStr}/${driver}.json`,
-            {
-                encoding: 'utf8',
-                flag: 'r',
-            }
-        )
+): ST_DriverTelemetry | null {
+    return ldataReadFile<ST_DriverTelemetry>(
+        MNT_PT,
+        'simsessionDriverTelemetry',
+        [subssesion, simsession, driver]
     );
-
-    return ret;
 }
 
-export async function getSimsessionDriverTelemetryAsync(
+export function getSimsessionDriverTelemetryAsync(
     subssesion: number,
     simsession: number,
     driver: number
-): Promise<ST_DriverTelemetry> {
-    let simsessionStr = simsession < 0 ? `n${-simsession}` : `${simsession}`;
-    let ret: ST_DriverTelemetry = <ST_DriverTelemetry>JSON.parse(
-        await readFile(
-            `${MNT_PT}simsessionDriverTelemetry/${subssesion}/${simsessionStr}/${driver}.json`,
-            {
-                encoding: 'utf8',
-                flag: 'r',
-            }
-        )
+): Promise<ST_DriverTelemetry | null> {
+    return ldataReadFileAsync<ST_DriverTelemetry>(
+        MNT_PT,
+        'simsessionDriverTelemetry',
+        [subssesion, simsession, driver]
     );
-
-    return ret;
 }
 
 const DATASET_PROCESSED_TELEMETRY = 'processedTelemetryManifest';

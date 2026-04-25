@@ -81,65 +81,39 @@ export function getLeagueSeasonSessionsAsync(
 export function getLapChartData(
     subsessionId: number,
     simsessionNumber: number
-): LapChartData {
-    let simsessionStr =
-        simsessionNumber < 0 ? `n${-simsessionNumber}` : `${simsessionNumber}`;
-    let ret: LapChartData = <LapChartData>JSON.parse(
-        readFileSync(
-            `${MNT_PT}lapChartData/${subsessionId}/${simsessionStr}.json`,
-            {
-                encoding: 'utf8',
-                flag: 'r',
-            }
-        )
-    );
-
-    return ret;
+): LapChartData | null {
+    return ldataReadFile<LapChartData>(MNT_PT, 'lapChartData', [
+        subsessionId,
+        simsessionNumber,
+    ]);
 }
 
-export async function getLapChartDataAsync(
+export function getLapChartDataAsync(
     subsessionId: number,
     simsessionNumber: number
-): Promise<LapChartData> {
-    let simsessionStr =
-        simsessionNumber < 0 ? `n${-simsessionNumber}` : `${simsessionNumber}`;
-    let ret: LapChartData = <LapChartData>JSON.parse(
-        await readFile(
-            `${MNT_PT}lapChartData/${subsessionId}/${simsessionStr}.json`,
-            {
-                encoding: 'utf8',
-                flag: 'r',
-            }
-        )
-    );
-
-    return ret;
+): Promise<LapChartData | null> {
+    return ldataReadFileAsync<LapChartData>(MNT_PT, 'lapChartData', [
+        subsessionId,
+        simsessionNumber,
+    ]);
 }
 
 export function getMembersData(
     leagueId: number,
     seasonId: number
-): MembersData {
-    let ret: MembersData = <MembersData>JSON.parse(
-        readFileSync(`${MNT_PT}membersData/${leagueId}/${seasonId}.json`, {
-            encoding: 'utf8',
-            flag: 'r',
-        })
-    );
-
-    return ret;
+): MembersData | null {
+    return ldataReadFile<MembersData>(MNT_PT, 'membersData', [
+        leagueId,
+        seasonId,
+    ]);
 }
 
-export async function getMembersDataAsync(
+export function getMembersDataAsync(
     leagueId: number,
     seasonId: number
-): Promise<MembersData> {
-    let ret: MembersData = <MembersData>JSON.parse(
-        await readFile(`${MNT_PT}membersData/${leagueId}/${seasonId}.json`, {
-            encoding: 'utf8',
-            flag: 'r',
-        })
-    );
-
-    return ret;
+): Promise<MembersData | null> {
+    return ldataReadFileAsync<MembersData>(MNT_PT, 'membersData', [
+        leagueId,
+        seasonId,
+    ]);
 }
