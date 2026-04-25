@@ -4,6 +4,11 @@ export {
     getLeagueSeasonSessions,
     getLapChartData,
     getMembersData,
+    getLeagueDirectoryAsync,
+    getLeagueSeasonsAsync,
+    getLeagueSeasonSessionsAsync,
+    getLapChartDataAsync,
+    getMembersDataAsync,
 } from './ldata-loaders/iracing-scraped-data-loader';
 export {
     getSimSessionResults,
@@ -11,16 +16,29 @@ export {
     getSimsessionDriverTelemetry,
     getProcessedTelemetryManifest,
     saveProcessedTelemetryManifest,
+    getSimSessionResultsAsync,
+    getLeaguSubsessionIndexAsync,
+    getSimsessionDriverTelemetryAsync,
+    getProcessedTelemetryManifestAsync,
+    saveProcessedTelemetryManifestAsync,
 } from './ldata-loaders/iracing-derived-data-loader';
-export { getActiveLeagueSchedule } from './ldata-loaders/ldata-usrcfg-data-loader';
+export {
+    getActiveLeagueSchedule,
+    getActiveLeagueScheduleAsync,
+} from './ldata-loaders/ldata-usrcfg-data-loader';
 export {
     getTelemetrySubsessions,
     saveTelemetrySubsessions,
     getTelemetryScan,
+    getTelemetrySubsessionsAsync,
+    saveTelemetrySubsessionsAsync,
+    getTelemetryScanAsync,
 } from './ldata-loaders/ldata-irrpy-data-loader';
 export {
     getReconstructedTelemetry,
     writeReconstructedTelemetry,
+    getReconstructedTelemetryAsync,
+    writeReconstructedTelemetryAsync,
 } from './ldata-loaders/ldata-xftelem-data-loader';
 export {
     getRawPositionChanges,
@@ -33,6 +51,16 @@ export {
     saveOnTrackPitStops,
     saveOnTrackIncidents,
     saveOnTrackFinishingNotes,
+    getRawPositionChangesAsync,
+    getOnTrackOvertakesAsync,
+    getOnTrackPitStopsAsync,
+    getOnTrackIncidentsAsync,
+    getOnTrackFinishingNotesAsync,
+    saveRawPositionChangesAsync,
+    saveOnTrackOvertakesAsync,
+    saveOnTrackPitStopsAsync,
+    saveOnTrackIncidentsAsync,
+    saveOnTrackFinishingNotesAsync,
 } from './ldata-loaders/ldata-trkevts-data-loader';
 
 export {
@@ -42,11 +70,19 @@ export {
     saveDotdProfile,
     getDotdManifest,
     saveDotdManifest,
+    getSimsessionSummaryAsync,
+    saveSimsessionSummaryAsync,
+    getDotdProfileAsync,
+    saveDotdProfileAsync,
+    getDotdManifestAsync,
+    saveDotdManifestAsync,
 } from './ldata-loaders/ldata-gentxt-data-loader';
 
 export {
     getSimsessionPodcastScriptedSrc,
     saveSimsessionPodcastScriptedSrc,
+    getSimsessionPodcastScriptedSrcAsync,
+    saveSimsessionPodcastScriptedSrcAsync,
 } from './ldata-loaders/ldata-pdcsrc-data-loader';
 
 export {
@@ -57,6 +93,13 @@ export {
     saveCumulativeDeltaBestLapChartData,
     savePacePercentVsIdealLapChartData,
     savePacePercentChartData,
+    getStartFinishChartDataAsync,
+    saveStartFinishChartDataAsync,
+    getCumulativeDeltaChartDataAsync,
+    saveCumulativeDeltaChartDataAsync,
+    saveCumulativeDeltaBestLapChartDataAsync,
+    savePacePercentVsIdealLapChartDataAsync,
+    savePacePercentChartDataAsync,
 } from './ldata-loaders/ldata-chart-data-loader';
 
 export {
@@ -66,4 +109,10 @@ export {
     getStewardRulingsByLeague,
     getStewardRulingsBySeason,
     getStewardRulingsByDriver,
+    getStewardRulingsAsync,
+    saveStewardRulingsAsync,
+    getAllStewardRulingsAsync,
+    getStewardRulingsByLeagueAsync,
+    getStewardRulingsBySeasonAsync,
+    getStewardRulingsByDriverAsync,
 } from './ldata-loaders/ldata-stward-data-loader';

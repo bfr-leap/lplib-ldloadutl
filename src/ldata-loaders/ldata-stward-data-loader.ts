@@ -1,5 +1,11 @@
 import { existsSync, readdirSync } from 'fs';
-import { ldataReadFile, ldataWriteFile } from './fsutil';
+import { readdir, stat } from 'fs/promises';
+import {
+    ldataReadFile,
+    ldataReadFileAsync,
+    ldataWriteFile,
+    ldataWriteFileAsync,
+} from './fsutil';
 import type { StewardRuling } from 'ir-endpoints-types';
 
 const MNT_PT = './public/data/ldata-stward/';
@@ -21,6 +27,19 @@ export function getStewardRulings(
     );
 }
 
+export async function getStewardRulingsAsync(
+    leagueId: number,
+    seasonId: number
+): Promise<StewardRuling[]> {
+    return (
+        (await ldataReadFileAsync<StewardRuling[]>(
+            MNT_PT,
+            DATASET_STEWARD_RULINGS,
+            [leagueId, seasonId]
+        )) ?? []
+    );
+}
+
 /**
  * Write the steward rulings for a single (leagueId, seasonId) pair. The
  * provided array replaces any existing rulings file for that season.
@@ -31,6 +50,17 @@ export function saveStewardRulings(
     rulings: StewardRuling[]
 ): void {
     ldataWriteFile(rulings, MNT_PT, DATASET_STEWARD_RULINGS, [
+        leagueId,
+        seasonId,
+    ]);
+}
+
+export function saveStewardRulingsAsync(
+    leagueId: number,
+    seasonId: number,
+    rulings: StewardRuling[]
+): Promise<void> {
+    return ldataWriteFileAsync(rulings, MNT_PT, DATASET_STEWARD_RULINGS, [
         leagueId,
         seasonId,
     ]);
@@ -57,11 +87,34 @@ export function getAllStewardRulings(): StewardRuling[] {
     return rulings;
 }
 
+export async function getAllStewardRulingsAsync(): Promise<StewardRuling[]> {
+    const root = `${MNT_PT}${DATASET_STEWARD_RULINGS}`;
+    if (!(await pathExistsAsync(root))) {
+        return [];
+    }
+
+    const rulings: StewardRuling[] = [];
+    const leagueDirs = await readdir(root, { withFileTypes: true });
+    for (const leagueEntry of leagueDirs) {
+        if (!leagueEntry.isDirectory()) continue;
+        const leagueId = parseLeagueSegment(leagueEntry.name);
+        if (leagueId === null) continue;
+        rulings.push(...(await readAllRulingsForLeagueAsync(leagueId)));
+    }
+    return rulings;
+}
+
 /**
  * Returns every steward ruling for the given league, across all seasons.
  */
 export function getStewardRulingsByLeague(leagueId: number): StewardRuling[] {
     return readAllRulingsForLeague(leagueId);
+}
+
+export function getStewardRulingsByLeagueAsync(
+    leagueId: number
+): Promise<StewardRuling[]> {
+    return readAllRulingsForLeagueAsync(leagueId);
 }
 
 /**
@@ -73,6 +126,14 @@ export function getStewardRulingsBySeason(seasonId: number): StewardRuling[] {
     return getAllStewardRulings().filter((r) => String(r.season_id) === needle);
 }
 
+export async function getStewardRulingsBySeasonAsync(
+    seasonId: number
+): Promise<StewardRuling[]> {
+    const needle = String(seasonId);
+    const all = await getAllStewardRulingsAsync();
+    return all.filter((r) => String(r.season_id) === needle);
+}
+
 /**
  * Returns every steward ruling that sanctioned the given driver, matched on
  * either the iRacing driver_id or the discord_user_id.
@@ -82,6 +143,19 @@ export function getStewardRulingsByDriver(
 ): StewardRuling[] {
     const needle = String(driverId);
     return getAllStewardRulings().filter(
+        (r) =>
+            String(r.driver_id) === needle ||
+            (r.discord_user_id !== undefined &&
+                String(r.discord_user_id) === needle)
+    );
+}
+
+export async function getStewardRulingsByDriverAsync(
+    driverId: number | string
+): Promise<StewardRuling[]> {
+    const needle = String(driverId);
+    const all = await getAllStewardRulingsAsync();
+    return all.filter(
         (r) =>
             String(r.driver_id) === needle ||
             (r.discord_user_id !== undefined &&
@@ -108,6 +182,38 @@ function readAllRulingsForLeague(leagueId: number): StewardRuling[] {
         rulings.push(...getStewardRulings(leagueId, seasonId));
     }
     return rulings;
+}
+
+async function readAllRulingsForLeagueAsync(
+    leagueId: number
+): Promise<StewardRuling[]> {
+    const leagueKey = leagueId < 0 ? `n${-leagueId}` : `${leagueId}`;
+    const leagueDir = `${MNT_PT}${DATASET_STEWARD_RULINGS}/${leagueKey}`;
+    if (!(await pathExistsAsync(leagueDir))) {
+        return [];
+    }
+
+    const rulings: StewardRuling[] = [];
+    const seasonFiles = await readdir(leagueDir, { withFileTypes: true });
+    for (const seasonEntry of seasonFiles) {
+        if (!seasonEntry.isFile()) continue;
+        if (!seasonEntry.name.endsWith('.json')) continue;
+        const seasonId = parseSeasonSegment(
+            seasonEntry.name.slice(0, -'.json'.length)
+        );
+        if (seasonId === null) continue;
+        rulings.push(...(await getStewardRulingsAsync(leagueId, seasonId)));
+    }
+    return rulings;
+}
+
+async function pathExistsAsync(path: string): Promise<boolean> {
+    try {
+        await stat(path);
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 function parseLeagueSegment(segment: string): number | null {

@@ -1,4 +1,5 @@
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
+import { writeFile, mkdir, readFile, stat } from 'fs/promises';
 import { notifyWrite } from './kafka-notify';
 
 function mountPointToDatasetId(mountPoint: string): string {
@@ -36,6 +37,31 @@ export function ldataWriteFile(
     notifyWrite(mountPointToDatasetId(mountPoint), datasetName, keys);
 }
 
+export async function ldataWriteFileAsync(
+    obj: any,
+    mountPoint: string,
+    datasetName: string,
+    keys: number[]
+): Promise<void> {
+    let keyStrings = keys.map((k) => (k < 0 ? `n${-k}` : `${k}`));
+    const path = `${mountPoint}${datasetName}/${keyStrings
+        .slice(0, -1)
+        .join('/')}`;
+    let dirExists = true;
+    try {
+        await stat(path);
+    } catch {
+        dirExists = false;
+    }
+    if (!dirExists) {
+        await mkdir(path, { recursive: true });
+    }
+    const filePath = `${mountPoint}${datasetName}/${keyStrings.join('/')}.json`;
+    await writeFile(filePath, JSON.stringify(obj));
+
+    notifyWrite(mountPointToDatasetId(mountPoint), datasetName, keys);
+}
+
 export function ldataReadFile<T>(
     mountPoint: string,
     datasetName: string,
@@ -45,6 +71,29 @@ export function ldataReadFile<T>(
     try {
         let ret: T = JSON.parse(
             readFileSync(
+                `${mountPoint}${datasetName}/${keyStrings.join('/')}.json`,
+                {
+                    encoding: 'utf8',
+                    flag: 'r',
+                }
+            )
+        );
+
+        return ret;
+    } catch (e) {
+        return null;
+    }
+}
+
+export async function ldataReadFileAsync<T>(
+    mountPoint: string,
+    datasetName: string,
+    keys: number[]
+): Promise<T | null> {
+    let keyStrings = keys.map((k) => (k < 0 ? `n${-k}` : `${k}`));
+    try {
+        let ret: T = JSON.parse(
+            await readFile(
                 `${mountPoint}${datasetName}/${keyStrings.join('/')}.json`,
                 {
                     encoding: 'utf8',
